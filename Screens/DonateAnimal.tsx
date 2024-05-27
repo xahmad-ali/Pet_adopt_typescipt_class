@@ -1,10 +1,15 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, TextInput } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { auth, db } from "../Firebase_File.js";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { auth, db } from "../Firebase_File";
 import { addDoc, collection } from "firebase/firestore";
-import { fetchUser } from "../UserFunctions.js";
+import { fetchUser } from "../UserFunctions";
+
+type RootStackParamList = {
+  UploadAnimalIamge: { animalId: string };
+  // Add other routes here if needed
+};
 
 const DonateAnimal: React.FC = () => {
   const [animalName, setAnimalName] = useState<string | null>(null);
@@ -12,6 +17,8 @@ const DonateAnimal: React.FC = () => {
   const [animalType, setAnimalType] = useState<string | null>(null);
   const [animalAge, setAnimalAge] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const saveInfo = async () => {
     try {
@@ -22,32 +29,27 @@ const DonateAnimal: React.FC = () => {
           const fetchedUserId = userData.id;
           setUserId(fetchedUserId);
 
-          try {
-            const usersCollectionRef = collection(db, "animalinfo");
-            const docRef = await addDoc(usersCollectionRef, {
-              OwnerId: fetchedUserId,
-              AnimalName: animalName,
-              AnimalType: animalType,
-              AnimalBreed: breed,
-              AnimalAge: animalAge,
-              createdAt: new Date().getTime(),
-            });
-            console.log("Document written with ID:", docRef.id);
-            console.log("info uploaded ");
-            goUploadImage(docRef.id);
-          } catch (error) {
-            console.error("Error adding document:", error.message);
-          }
+          const usersCollectionRef = collection(db, "animalinfo");
+          const docRef = await addDoc(usersCollectionRef, {
+            OwnerId: fetchedUserId,
+            AnimalName: animalName,
+            AnimalType: animalType,
+            AnimalBreed: breed,
+            AnimalAge: animalAge,
+            createdAt: new Date().getTime(),
+          });
+          console.log("Document written with ID:", docRef.id);
+          console.log("info uploaded ");
+          goUploadImage(docRef.id);
         }
       }
     } catch (error) {
-      console.error("Error getting user email:", error.message);
+      console.error("Error saving animal info:", (error as Error).message);
     }
   };
 
-  const navigation = useNavigation();
   const goUploadImage = (animalId: string) => {
-    navigation.navigate("UploadAnimalImage", { animalId });
+    navigation.navigate("UploadAnimalIamge", { animalId });
   };
 
   return (
