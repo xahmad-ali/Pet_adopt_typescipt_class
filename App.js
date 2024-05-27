@@ -1,20 +1,83 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Welcome } from './Screens/Welcome.js';
+import { AdoptAnimal } from './Screens/AdoptAnimal.js';
+import { DonateAnimal } from './Screens/DonateAnimal.tsx';
+import Home from './Screens/Home.js';
+import Login from './Screens/Login.js';
+import Signup from './Screens/Signup.tsx';
+import { Profile } from './Screens/Profile.js';
+import { UploadAnimalIamge } from './Screens/UploadAnimalIamge.js';
+import { ChattingConcern } from './Screens/ChattingConcern.js';
+import { Chatting } from './Screens/Chatting.js';
+import { AllChats } from './Screens/AllChats.tsx';
 
-export default function App() {
+
+
+
+import { FontAwesome5 } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+
+
+
+
+
+const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
+
+
+function DrawerNavigation() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Drawer.Navigator>
+       <Drawer.Screen name="MyTabs" component={MyTabs} />
+      <Drawer.Screen name="AdoptAnimal" component={AdoptAnimal} />
+      <Drawer.Screen name="DonateAnimal" component={DonateAnimal} />
+      <Drawer.Screen name="AllChats" component={AllChats} />
+
+    </Drawer.Navigator>
+  );
+};
+
+
+function MyTabs() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={Home}  options={{
+          tabBarIcon: () => (
+            <MaterialIcons name="home" size={24} color="black"  />
+          )
+          }}/>
+      <Tab.Screen name="Profile" component={Profile} options={{
+          tabBarIcon: () => (
+            <FontAwesome5 name="user" size={24} color="black"  /> 
+          ),
+        }} />
+      
+    </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  return (
+  
+
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Welcome" component={Welcome} options={{ headerShown: true }} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Signup" component={Signup} />
+        <Stack.Screen name="DrawerNavigation" component={DrawerNavigation}  options={{ headerShown: false }}/>
+        <Stack.Screen name="UploadAnimalIamge" component={UploadAnimalIamge} />
+        <Stack.Screen name="ChattingConcern" component={ChattingConcern} />
+    
+        <Stack.Screen name="Chatting" component={Chatting} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  
+
+  );
+}

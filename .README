@@ -1,0 +1,19 @@
+  
+  
+  
+  useEffect(() => {
+
+    const listen=Appearance.getColorScheme()
+  // const listen = Appearance.addChangeListener((colrTheme) => {
+  //   if (colrTheme.colorScheme === 'dark') {
+  //     setTheme('DARK');
+  //   } else {
+  //     setTheme('LIGHT');
+  //   }
+  // });
+
+    console.log(listen)
+    return () => {
+      listen
+    };
+  }, []);
